@@ -12,20 +12,31 @@ function initializeConnection() {
     }
 
     try {
-        peer = new Peer();
+        // Créer un ID unique pour chaque utilisateur
+        const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+        peer = new Peer(userId, {
+            debug: 3,
+            config: {
+                'iceServers': [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:stun1.l.google.com:19302' },
+                    { urls: 'stun:stun2.l.google.com:19302' }
+                ]
+            }
+        });
         
         peer.on('open', (id) => {
             console.log('Mon ID:', id);
-            const connectionInfo = document.getElementById('connectionInfo');
-            if (connectionInfo) {
-                connectionInfo.value = id;
-                connectionInfo.style.display = 'block';
-            }
-            
-            // Mettre à jour l'ID dans la page d'aide
             const peerIdElement = document.getElementById('peerId');
             if (peerIdElement) {
                 peerIdElement.textContent = id;
+            }
+            
+            // Mettre à jour le statut de connexion
+            const connectionStatus = document.getElementById('connectionStatus');
+            if (connectionStatus) {
+                connectionStatus.textContent = 'En attente de connexion...';
+                connectionStatus.className = 'waiting';
             }
         });
 
@@ -37,11 +48,19 @@ function initializeConnection() {
 
         peer.on('error', (err) => {
             console.error('Erreur de connexion:', err);
-            alert('Erreur de connexion: ' + err.message);
+            const connectionStatus = document.getElementById('connectionStatus');
+            if (connectionStatus) {
+                connectionStatus.textContent = 'Erreur de connexion';
+                connectionStatus.className = 'error';
+            }
         });
     } catch (error) {
         console.error('Erreur lors de l\'initialisation:', error);
-        alert('Erreur lors de l\'initialisation: ' + error.message);
+        const connectionStatus = document.getElementById('connectionStatus');
+        if (connectionStatus) {
+            connectionStatus.textContent = 'Erreur d\'initialisation';
+            connectionStatus.className = 'error';
+        }
     }
 }
 
@@ -57,13 +76,17 @@ function setupConnection() {
         const connectionStatus = document.getElementById('connectionStatus');
         if (connectionStatus) {
             connectionStatus.textContent = 'Connecté';
-            connectionStatus.style.color = 'green';
+            connectionStatus.className = 'connected';
+        }
+        
+        // Synchroniser les données au moment de la connexion
+        if (typeof window.saveAllData === 'function') {
+            window.saveAllData();
         }
     });
 
     connection.on('data', (data) => {
         console.log('Données reçues:', data);
-        // Utiliser la fonction handleIncomingData définie dans script.js
         if (typeof window.handleIncomingData === 'function') {
             window.handleIncomingData(data);
         } else {
@@ -76,8 +99,9 @@ function setupConnection() {
         const connectionStatus = document.getElementById('connectionStatus');
         if (connectionStatus) {
             connectionStatus.textContent = 'Déconnecté';
-            connectionStatus.style.color = 'red';
+            connectionStatus.className = 'disconnected';
         }
+        connection = null;
     });
 }
 
@@ -87,43 +111,43 @@ function connectToPeer(peerId) {
     
     if (!peer) {
         console.error('Peer non initialisé');
-        alert('Erreur: La connexion n\'est pas initialisée');
+        const connectionStatus = document.getElementById('connectionStatus');
+        if (connectionStatus) {
+            connectionStatus.textContent = 'Erreur: Connexion non initialisée';
+            connectionStatus.className = 'error';
+        }
         return;
     }
     
     try {
+        if (connection) {
+            connection.close();
+        }
         connection = peer.connect(peerId);
         setupConnection();
     } catch (error) {
         console.error('Erreur lors de la connexion:', error);
-        alert('Erreur lors de la connexion: ' + error.message);
+        const connectionStatus = document.getElementById('connectionStatus');
+        if (connectionStatus) {
+            connectionStatus.textContent = 'Erreur de connexion';
+            connectionStatus.className = 'error';
+        }
     }
 }
 
 // Envoi de données
 function sendData(data) {
-    console.log('Envoi de données:', data);
-    
-    if (!connection || !connection.open) {
-        console.error('Pas de connexion active');
-        alert('Erreur: Pas de connexion active');
-        return;
-    }
-    
-    try {
+    if (connection && connection.open) {
         connection.send(data);
-    } catch (error) {
-        console.error('Erreur lors de l\'envoi:', error);
-        alert('Erreur lors de l\'envoi: ' + error.message);
+        return true;
     }
+    return false;
 }
 
-// Export des fonctions nécessaires
-window.p2p = {
-    initializeConnection,
-    connectToPeer,
-    sendData
-};
+// Exposer les fonctions globalement
+window.initializeConnection = initializeConnection;
+window.connectToPeer = connectToPeer;
+window.sendData = sendData;
 
 // Initialisation automatique
 document.addEventListener('DOMContentLoaded', () => {
