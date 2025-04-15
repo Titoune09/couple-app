@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Notre Histoire d'Amour - Une application pour partager des moments romantiques">
+    <title>Notre Histoire d'Amour</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <script src="p2p.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <header class="hero">
+            <h1>❤️ Notre Histoire d'Amour ❤️</h1>
+            <div class="theme-selector">
+                <button class="theme-option" data-theme="default" title="Thème par défaut">🌞</button>
+                <button class="theme-option" data-theme="dark" title="Thème sombre">🌙</button>
+                <button class="theme-option" data-theme="pastel" title="Thème pastel">🎨</button>
+                <button class="theme-option" data-theme="neon" title="Thème néon">✨</button>
+            </div>
+            <p class="subtitle">Une aventure qui ne fait que commencer</p>
+            <div class="header-buttons">
+                <a href="help.html" class="help-btn">❓ Guide d'utilisation</a>
+                <button id="resetAll" class="reset-btn">🔄 Réinitialiser tout</button>
+            </div>
+        </header>
+
+        <section class="gallery">
+            <div class="section-header">
+                <h2>Nos Photos</h2>
+                <button id="clearPhotos" class="clear-btn">🗑️ Effacer toutes les photos</button>
+            </div>
+            <div class="photo-grid">
+                <div class="photo-item">
+                    <img src="assets/placeholder.jpg" alt="Photo">
+                    <button class="delete-btn" onclick="deletePhoto(this.parentElement)">🗑️</button>
+                </div>
+            </div>
+            <div class="photo-controls">
+                <button id="newPhoto" class="btn">Nouvelle Photo</button>
+                <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
+                <button class="btn" onclick="document.getElementById('photoInput').click()">Ajouter des Photos</button>
+            </div>
+        </section>
+
+        <section class="love-notes">
+            <div class="section-header">
+                <h2>Nos Messages d'Amour</h2>
+                <button id="clearMessages" class="clear-btn">🗑️ Effacer tous les messages</button>
+            </div>
+            <div class="notes-container">
+                <!-- Les messages seront ajoutés dynamiquement -->
+            </div>
+            <div class="message-input">
+                <input type="text" id="messageInput" placeholder="Écrivez votre message...">
+                <button id="sendMessage" class="btn">Envoyer</button>
+            </div>
+        </section>
+
+        <section class="flirty-messages">
+            <div class="section-header">
+                <h2>Messages Coquins</h2>
+                <button id="clearFlirtyMessages" class="clear-btn">🗑️ Effacer tous les messages</button>
+            </div>
+            <div class="flirty-container">
+                <div class="flirty-input">
+                    <input type="text" id="flirtyInput" placeholder="Écris un message coquin...">
+                    <button id="sendFlirty" class="btn">Envoyer</button>
+                    <button id="randomFlirty" class="btn">Message Aléatoire</button>
+                </div>
+                <div class="flirty-messages"></div>
+            </div>
+        </section>
+
+        <section class="spicy-challenges">
+            <div class="section-header">
+                <h2>Défis Coquins</h2>
+                <button id="clearChallenges" class="clear-btn">🗑️ Effacer l'historique des défis</button>
+            </div>
+            <div class="challenge-display">
+                <div class="current-challenge">
+                    <p class="challenge-text">Cliquez sur le bouton pour obtenir un défi...</p>
+                    <span class="challenge-level"></span>
+                </div>
+                <button id="newChallenge" class="btn">Nouveau Défi</button>
+            </div>
+        </section>
+
+        <section id="wish-list" class="section">
+            <div class="section-header">
+                <h2>💭 Wish List</h2>
+                <button id="clearWishes" class="clear-btn">🗑️ Effacer tous les souhaits</button>
+            </div>
+            <div class="wish-container">
+                <div class="wish-input">
+                    <input type="text" id="wishInput" placeholder="Ajouter un fantasme ou désir...">
+                    <button id="addWish">➕</button>
+                </div>
+                <div class="wish-list"></div>
+            </div>
+        </section>
+
+        <section id="date-night" class="section">
+            <div class="section-header">
+                <h2>🌙 Date Night</h2>
+                <button id="clearDates" class="clear-btn">🗑️ Effacer l'historique des dates</button>
+            </div>
+            <div class="date-container">
+                <div class="date-idea">
+                    <p class="date-text">Cliquez sur le bouton pour générer une idée de date</p>
+                </div>
+                <button id="generateDate" class="action-btn">Générer une Date</button>
+            </div>
+        </section>
+
+        <section id="truth-dare" class="section">
+            <div class="section-header">
+                <h2>🎲 Truth or Dare</h2>
+                <button id="clearTruthDare" class="clear-btn">🗑️ Effacer l'historique</button>
+            </div>
+            <div class="game-container">
+                <div class="game-choice">
+                    <button id="truthBtn" class="game-btn">Vérité</button>
+                    <button id="dareBtn" class="game-btn">Action</button>
+                </div>
+                <div class="game-content">
+                    <p class="game-text">Choisissez Vérité ou Action</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="role-play" class="section">
+            <div class="section-header">
+                <h2>🎭 Scénarios de Rôle</h2>
+                <button id="clearScenarios" class="clear-btn">🗑️ Effacer l'historique</button>
+            </div>
+            <div class="scenario-container">
+                <div class="scenario-content">
+                    <p class="scenario-text">Cliquez pour générer un scénario</p>
+                </div>
+                <button id="generateScenario" class="action-btn">Nouveau Scénario</button>
+            </div>
+        </section>
+
+        <section id="ephemeral-photos" class="section">
+            <div class="section-header">
+                <h2>🔒 Photos Éphémères</h2>
+                <button id="clearEphemeralPhotos" class="clear-btn">🗑️ Effacer toutes les photos</button>
+            </div>
+            <div class="ephemeral-container">
+                <div class="photo-upload">
+                    <div class="upload-area" id="dropZone">
+                        <input type="file" id="ephemeralPhotoInput" accept="image/*" multiple style="display: none;">
+                        <div class="upload-prompt">
+                            <span class="upload-icon">📸</span>
+                            <p>Glissez vos photos ici ou cliquez pour sélectionner</p>
+                        </div>
+                    </div>
+                    <div class="upload-options">
+                        <div class="password-field">
+                            <label for="photoPassword">Mot de passe :</label>
+                            <input type="password" id="photoPassword" placeholder="Entrez un mot de passe">
+                        </div>
+                        <div class="timer-field">
+                            <label for="photoTimer">Durée (minutes) :</label>
+                            <input type="number" id="photoTimer" min="0" value="0" placeholder="0 = illimité">
+                        </div>
+                        <button id="sendPhotoBtn" class="upload-btn">Envoyer</button>
+                    </div>
+                </div>
+                <div class="ephemeral-gallery"></div>
+            </div>
+        </section>
+
+        <!-- Mode Hardcore -->
+        <section class="hardcore-container">
+            <h2>Mode Hardcore 🔥</h2>
+            <div class="hardcore-tabs">
+                <button class="tab-btn active" data-tab="challenges">Défis</button>
+                <button class="tab-btn" data-tab="messages">Messages</button>
+                <button class="tab-btn" data-tab="commands">Commandes</button>
+            </div>
+
+            <div id="challenges" class="tab-content active">
+                <div class="challenge-display">
+                    <div class="challenge-text">Cliquez sur le bouton pour générer un défi</div>
+                    <div class="challenge-level"></div>
+                </div>
+                <button id="newHardcoreChallenge" class="action-btn">Nouveau Défi</button>
+            </div>
+
+            <div id="messages" class="tab-content">
+                <div class="message-display">
+                    <div class="message-text">Cliquez sur le bouton pour générer un message</div>
+                </div>
+                <button id="newHardcoreMessage" class="action-btn">Nouveau Message</button>
+            </div>
+
+            <div id="commands" class="tab-content">
+                <div class="command-display">
+                    <div class="command-text">Cliquez sur le bouton pour générer une commande</div>
+                </div>
+                <button id="newHardcoreCommand" class="action-btn">Nouvelle Commande</button>
+            </div>
+        </section>
+
+        <section id="connection" class="section">
+            <div class="section-header">
+                <h2>🔗 Connexion P2P</h2>
+            </div>
+            <div class="connection-container">
+                <div class="connection-status">
+                    <p>Statut: <span id="connectionStatus">Non connecté</span></p>
+                    <p>Votre ID: <span id="peerId">En attente...</span></p>
+                </div>
+                <div class="connection-form">
+                    <input type="text" id="peerIdInput" placeholder="Entrez l'ID de votre partenaire">
+                    <button id="connectBtn" class="btn">Se connecter</button>
+                </div>
+                <div class="connection-info">
+                    <p>Pour vous connecter :</p>
+                    <ol>
+                        <li>Ouvrez le site sur deux navigateurs différents</li>
+                        <li>Copiez l'ID de votre partenaire</li>
+                        <li>Collez l'ID dans le champ ci-dessus</li>
+                        <li>Cliquez sur "Se connecter"</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html> 

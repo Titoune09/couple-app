@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guide d'utilisation - Notre Histoire d'Amour</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+    <script>
+        // Test de chargement de PeerJS
+        window.addEventListener('load', () => {
+            if (typeof Peer === 'undefined') {
+                console.error('PeerJS n\'est pas chargé !');
+                alert('Erreur : PeerJS n\'est pas chargé. Veuillez rafraîchir la page.');
+            } else {
+                console.log('PeerJS est chargé avec succès !');
+            }
+        });
+    </script>
+    <script src="p2p.js"></script>
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="hero">
+            <h1>📖 Guide d'utilisation</h1>
+            <a href="index.html" class="back-btn">← Retour à l'application</a>
+        </header>
+
+        <section class="help-section">
+            <h2>Comment utiliser l'application</h2>
+            <div class="help-content">
+                <h3>🎨 Thèmes</h3>
+                <p>Cliquez sur les icônes en haut de la page pour changer le thème :</p>
+                <ul>
+                    <li>🌞 Thème par défaut</li>
+                    <li>🌙 Thème sombre</li>
+                    <li>🎨 Thème pastel</li>
+                    <li>✨ Thème néon</li>
+                </ul>
+
+                <h3>💌 Messages d'amour</h3>
+                <p>Dans la section "Nos Messages d'Amour" :</p>
+                <ul>
+                    <li>Écrivez votre message dans le champ de texte</li>
+                    <li>Cliquez sur "Envoyer" ou appuyez sur Entrée pour l'envoyer</li>
+                    <li>Utilisez le bouton 🗑️ pour supprimer un message</li>
+                </ul>
+
+                <h3>📸 Photos</h3>
+                <p>Dans la section "Nos Photos" et "Roulette des Photos" :</p>
+                <ul>
+                    <li>Cliquez sur "Nouvelle Photo" pour voir une photo aléatoire</li>
+                    <li>Utilisez "Ajouter des Photos" pour ajouter vos propres photos</li>
+                    <li>Utilisez le bouton 🗑️ pour supprimer une photo</li>
+                </ul>
+
+                <h3>🤝 Connexion P2P</h3>
+                <p>Pour partager l'application avec votre partenaire :</p>
+                <ul>
+                    <li>Cliquez sur "Démarrer une nouvelle connexion"</li>
+                    <li>Un ID de connexion unique sera généré automatiquement</li>
+                    <li>Partagez cet ID avec votre partenaire</li>
+                    <li>Votre partenaire peut coller cet ID pour se connecter</li>
+                    <li>Une fois connecté, vous pourrez partager :</li>
+                    <ul>
+                        <li>💌 Messages d'amour</li>
+                        <li>📸 Photos</li>
+                        <li>🎨 Thèmes</li>
+                    </ul>
+                </ul>
+                <div class="connection-status">
+                    <p>Statut de la connexion : <span id="connectionStatus">Non connecté</span></p>
+                    <p>Votre ID : <span id="peerId">En attente...</span></p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html> 
