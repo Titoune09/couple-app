@@ -7,6 +7,7 @@
     { "source": "/api/contributions", "destination": "/api/contributions.js" },
     { "source": "/api/contributions/(.*)", "destination": "/api/contributions.js" },
     { "source": "/", "destination": "/JNFGKML/index.html" },
+    { "source": "/help", "destination": "/JNFGKML/help.html" },
     { "source": "/(.*)", "destination": "/JNFGKML/$1" }
   ],
   "cleanUrls": true,

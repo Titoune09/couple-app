@@ -42,6 +42,10 @@ ensureStorage();
 app.use(express.json({ limit: '30mb' }));
 app.use(express.static(path.join(__dirname, 'JNFGKML')));
 
+app.get('/help', (req, res) => {
+    res.sendFile(path.join(__dirname, 'JNFGKML', 'help.html'));
+});
+
 app.get('/api/contributions', async (req, res) => {
     const entries = await readContributions();
     res.json(entries);
