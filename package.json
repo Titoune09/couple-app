@@ -1,0 +1,13 @@
+{
+  "name": "eva-birthday-site",
+  "version": "1.0.0",
+  "description": "Site d'anniversaire interactif pour Eva avec mur des souvenirs partagé",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@vercel/blob": "^0.21.0",
+    "express": "^4.19.2"
+  }
+}
