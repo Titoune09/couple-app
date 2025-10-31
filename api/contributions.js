@@ -1,6 +1,10 @@
+const path = require('path');
+const fs = require('fs/promises');
 const { buildContribution } = require('../utils/contributionValidation');
 
-const STORAGE_KEY = 'contributions.json';
+const JSON_STORAGE_URL = process.env.JSON_STORAGE_URL;
+const JSON_STORAGE_SECRET = process.env.JSON_STORAGE_SECRET;
+const DATA_FILE = path.join(__dirname, '..', 'data', 'contributions.json');
 
 function withCors(res) {
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -29,61 +33,84 @@ async function readBody(req) {
     }
 }
 
-async function loadEntries() {
-    ensureBlobToken();
-    const { list } = await import('@vercel/blob');
+function useRemoteStorage() {
+    return Boolean(JSON_STORAGE_URL);
+}
 
-    const { blobs } = await list({ prefix: STORAGE_KEY, limit: 1 });
-    if (!blobs.length) {
-        return [];
-    }
-
-    const target = blobs[0];
+async function readLocalEntries() {
     try {
-        const response = await fetch(target.downloadUrl || target.url, {
-            cache: 'no-store'
-        });
-        if (!response.ok) {
+        const raw = await fs.readFile(DATA_FILE, 'utf-8');
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+        if (error.code === 'ENOENT') {
             return [];
         }
-        const json = await response.json().catch(() => []);
-        return Array.isArray(json) ? json : [];
-    } catch (error) {
-        console.error('Erreur de lecture Blob', error);
+        console.error('Lecture locale impossible', error);
         return [];
+    }
+}
+
+async function writeLocalEntries(entries) {
+    await fs.mkdir(path.dirname(DATA_FILE), { recursive: true });
+    await fs.writeFile(DATA_FILE, JSON.stringify(entries, null, 2), 'utf-8');
+}
+
+function buildRemoteHeaders(base = {}) {
+    const headers = { ...base };
+    if (JSON_STORAGE_SECRET) {
+        headers['secret-key'] = JSON_STORAGE_SECRET;
+    }
+    return headers;
+}
+
+async function loadEntries() {
+    if (!useRemoteStorage()) {
+        return readLocalEntries();
+    }
+
+    try {
+        const response = await fetch(JSON_STORAGE_URL, {
+            headers: buildRemoteHeaders({ Accept: 'application/json' }),
+            cache: 'no-store'
+        });
+
+        if (response.status === 404) {
+            return [];
+        }
+
+        if (!response.ok) {
+            console.error('Réponse de stockage distante invalide', response.status, await response.text());
+            throw new Error('Impossible de récupérer les souvenirs distants.');
+        }
+
+        const data = await response.json();
+        return Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error('Erreur de lecture du stockage distant', error);
+        throw new Error("Impossible de récupérer les souvenirs distants.");
     }
 }
 
 async function saveEntries(entries) {
-    ensureBlobToken();
-    const { put } = await import('@vercel/blob');
+    if (!useRemoteStorage()) {
+        return writeLocalEntries(entries);
+    }
 
-    await put(STORAGE_KEY, JSON.stringify(entries, null, 2), {
-        access: 'public',
-        contentType: 'application/json',
-        addRandomSuffix: false,
-        cacheControlMaxAge: 0
+    const response = await fetch(JSON_STORAGE_URL, {
+        method: 'PUT',
+        headers: buildRemoteHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify(entries, null, 2)
     });
+
+    if (!response.ok) {
+        console.error('Erreur de sauvegarde distante', response.status, await response.text());
+        throw new Error('Impossible de sauvegarder dans le stockage distant.');
+    }
 }
 
 async function clearEntries() {
-    ensureBlobToken();
-    const { del } = await import('@vercel/blob');
-
-    try {
-        await del(STORAGE_KEY);
-    } catch (error) {
-        if (error?.status !== 404) {
-            console.error('Erreur lors de la suppression du Blob', error);
-            throw error;
-        }
-    }
-}
-
-function ensureBlobToken() {
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
-        throw new Error('BLOB_READ_WRITE_TOKEN manquant. Configure-le dans les variables d\'environnement Vercel.');
-    }
+    await saveEntries([]);
 }
 
 module.exports = async function handler(req, res) {
@@ -101,8 +128,8 @@ module.exports = async function handler(req, res) {
             res.status(200).json(entries);
         } catch (error) {
             console.error('GET /api/contributions', error);
-            const message = error?.message?.includes('BLOB_READ_WRITE_TOKEN')
-                ? 'Configure la variable BLOB_READ_WRITE_TOKEN avant de déployer sur Vercel.'
+            const message = useRemoteStorage()
+                ? 'Impossible de récupérer les souvenirs distants.'
                 : 'Impossible de récupérer les souvenirs.';
             res.status(500).json({ message });
         }
@@ -126,8 +153,8 @@ module.exports = async function handler(req, res) {
             res.status(201).json(contribution);
         } catch (error) {
             console.error('POST /api/contributions', error);
-            const message = error?.message?.includes('BLOB_READ_WRITE_TOKEN')
-                ? 'Configure la variable BLOB_READ_WRITE_TOKEN avant de déployer sur Vercel.'
+            const message = useRemoteStorage()
+                ? "Impossible de sauvegarder ce souvenir dans le stockage distant."
                 : 'Impossible de sauvegarder ce souvenir pour le moment.';
             res.status(500).json({ message });
         }
@@ -137,12 +164,11 @@ module.exports = async function handler(req, res) {
     if (req.method === 'DELETE') {
         try {
             await clearEntries();
-            await saveEntries([]);
             res.status(200).json({ success: true });
         } catch (error) {
             console.error('DELETE /api/contributions', error);
-            const message = error?.message?.includes('BLOB_READ_WRITE_TOKEN')
-                ? 'Configure la variable BLOB_READ_WRITE_TOKEN avant de déployer sur Vercel.'
+            const message = useRemoteStorage()
+                ? 'Impossible de vider le mur dans le stockage distant.'
                 : 'Impossible de vider le mur actuellement.';
             res.status(500).json({ message });
         }
