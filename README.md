@@ -23,20 +23,26 @@ Le dépôt contient la configuration nécessaire (`vercel.json`) pour servir le 
 ### Pré-requis
 
 - Crée un projet Vercel et relie-le à ce dépôt.
-- Active le produit **Vercel Blob** et génère un `BLOB_READ_WRITE_TOKEN` avec accès en lecture/écriture.
-- Ajoute ce token dans les variables d'environnement du projet Vercel (onglet *Settings → Environment Variables*).
+- Ouvre [https://jsonstorage.net/](https://jsonstorage.net/) (l'interface fonctionne très bien sur iPad).
+  1. Clique sur **Create JSON storage**.
+  2. Colle `[]` comme contenu initial puis valide.
+  3. Copie l'URL fournie (elle ressemble à `https://jsonstorage.net/api/items/<id>`).
+  4. Copie aussi la valeur **Secret Key** affichée juste en dessous.
+- Ajoute deux variables d'environnement dans Vercel :
+  - `JSON_STORAGE_URL` : l'URL récupérée à l'étape 3.
+  - `JSON_STORAGE_SECRET` : la secret key de l'étape 4 (obligatoire pour autoriser les mises à jour).
 
 ### Déploiement
 
 1. Pousse la branche sur GitHub puis lance un déploiement Vercel ou utilise `vercel --prod`.
-2. L'API serverless persiste désormais les contributions dans un blob `contributions.json`, partagé par tous les visiteurs.
+2. L'API serverless persiste désormais les contributions dans ton espace JSONStorage. Pas besoin de ligne de commande : tout se fait depuis le navigateur.
 
 ## Fonctionnalités clés
 
 - Mise en page animée et messages personnalisés pour Eva et Noah.
 - Section spéciale dédiée au crew "Oups la boulette" et à leurs missions secrètes.
 - Mur des souvenirs collaboratif (messages, photos, vidéos, liens YouTube) partagé entre tous les amis.
-- Stockage persistant des contributions côté serveur : fichier JSON en local, blob Vercel partagé en production.
+- Stockage persistant des contributions côté serveur : fichier JSON en local, instance JSONStorage partagée en production.
 
 ## Structure du projet
 
