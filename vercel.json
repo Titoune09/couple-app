@@ -1,0 +1,14 @@
+{
+  "builds": [
+    { "src": "api/contributions.js", "use": "@vercel/node" },
+    { "src": "JNFGKML/**/*", "use": "@vercel/static" }
+  ],
+  "rewrites": [
+    { "source": "/api/contributions", "destination": "/api/contributions.js" },
+    { "source": "/api/contributions/(.*)", "destination": "/api/contributions.js" },
+    { "source": "/", "destination": "/JNFGKML/index.html" },
+    { "source": "/(.*)", "destination": "/JNFGKML/$1" }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}

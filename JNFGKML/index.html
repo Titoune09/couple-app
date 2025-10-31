@@ -3,236 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Notre Histoire d'Amour - Une application pour partager des moments romantiques">
-    <title>Notre Histoire d'Amour</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Les 16 ans magiques d'Eva</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
-    <script src="p2p.js" defer></script>
-    <script src="script.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600;700&family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <header class="hero">
-            <h1>❤️ Notre Histoire d'Amour ❤️</h1>
-            <div class="theme-selector">
-                <button class="theme-option" data-theme="default" title="Thème par défaut">🌞</button>
-                <button class="theme-option" data-theme="dark" title="Thème sombre">🌙</button>
-                <button class="theme-option" data-theme="pastel" title="Thème pastel">🎨</button>
-                <button class="theme-option" data-theme="neon" title="Thème néon">✨</button>
+    <div class="floating-hearts" aria-hidden="true"></div>
+    <header class="hero">
+        <div class="hero-content">
+            <span class="hero-badge">16 ans • Eva</span>
+            <h1>Joyeux anniversaire, <span class="highlight">Eva</span> !</h1>
+            <p class="typewriter" data-text="Une tornade de joie, de rires et d'amour vient d'avoir 16 ans 🎉">Une tornade de joie, de rires et d'amour vient d'avoir 16 ans 🎉</p>
+            <p class="hero-subtitle">Depuis hier, elle et Noah rayonnent plus fort que les lumières de la Tour Eiffel ✨</p>
+            <p class="hero-note">La team <strong>Oups la boulette</strong> est en mission spéciale pour amplifier ton bonheur.</p>
+            <div class="hero-buttons">
+                <button id="confettiBtn" class="btn primary">Lâche les confettis</button>
+                <button id="complimentBtn" class="btn outline">Complimente Eva</button>
             </div>
-            <p class="subtitle">Une aventure qui ne fait que commencer</p>
-            <div class="header-buttons">
-                <a href="help.html" class="help-btn">❓ Guide d'utilisation</a>
-                <button id="resetAll" class="reset-btn">🔄 Réinitialiser tout</button>
-            </div>
-        </header>
+            <div class="compliment-display" role="status" aria-live="polite"></div>
+        </div>
+        <div class="hero-illustration">
+            <div class="bubble bubble-main">Eva<br>&amp;<br>Noah</div>
+            <div class="bubble bubble-secondary">16</div>
+            <div class="bubble bubble-tertiary">💫</div>
+        </div>
+    </header>
 
-        <section class="gallery">
-            <div class="section-header">
-                <h2>Nos Photos</h2>
-                <button id="clearPhotos" class="clear-btn">🗑️ Effacer toutes les photos</button>
-            </div>
-            <div class="photo-grid">
-                <div class="photo-item">
-                    <img src="assets/placeholder.jpg" alt="Photo">
-                    <button class="delete-btn" onclick="deletePhoto(this.parentElement)">🗑️</button>
-                </div>
-            </div>
-            <div class="photo-controls">
-                <button id="newPhoto" class="btn">Nouvelle Photo</button>
-                <input type="file" id="photoInput" accept="image/*" multiple style="display: none;">
-                <button class="btn" onclick="document.getElementById('photoInput').click()">Ajouter des Photos</button>
+    <main>
+        <section class="section vibes">
+            <h2 class="section-title">Les vibes d'Eva</h2>
+            <div class="vibe-grid">
+                <article class="vibe-card">
+                    <span class="icon">🌟</span>
+                    <h3>Joie contagieuse</h3>
+                    <p>Ton sourire transforme chaque journée en feu d'artifice, même sous la pluie parisienne.</p>
+                </article>
+                <article class="vibe-card">
+                    <span class="icon">💞</span>
+                    <h3>Love story express</h3>
+                    <p>24 heures avec Noah et vous êtes déjà la légende romantique 2024. On veut la suite !</p>
+                </article>
+                <article class="vibe-card">
+                    <span class="icon">🌆</span>
+                    <h3>Montmartre mood</h3>
+                    <p>Private joke certified : tu fais danser les artistes de rue rien qu'en passant.</p>
+                </article>
+                <article class="vibe-card">
+                    <span class="icon">🎁</span>
+                    <h3>16 surprises</h3>
+                    <p>Chaque heure de ta journée d'anniversaire doit cacher un moment fou. Challenge accepté ?</p>
+                </article>
             </div>
         </section>
 
-        <section class="love-notes">
-            <div class="section-header">
-                <h2>Nos Messages d'Amour</h2>
-                <button id="clearMessages" class="clear-btn">🗑️ Effacer tous les messages</button>
-            </div>
-            <div class="notes-container">
-                <!-- Les messages seront ajoutés dynamiquement -->
-            </div>
-            <div class="message-input">
-                <input type="text" id="messageInput" placeholder="Écrivez votre message...">
-                <button id="sendMessage" class="btn">Envoyer</button>
-            </div>
-        </section>
-
-        <section class="flirty-messages">
-            <div class="section-header">
-                <h2>Messages Coquins</h2>
-                <button id="clearFlirtyMessages" class="clear-btn">🗑️ Effacer tous les messages</button>
-            </div>
-            <div class="flirty-container">
-                <div class="flirty-input">
-                    <input type="text" id="flirtyInput" placeholder="Écris un message coquin...">
-                    <button id="sendFlirty" class="btn">Envoyer</button>
-                    <button id="randomFlirty" class="btn">Message Aléatoire</button>
-                </div>
-                <div class="flirty-messages"></div>
+        <section class="section squad" aria-labelledby="squad-title">
+            <h2 id="squad-title" class="section-title">Oups la boulette en opération surprise</h2>
+            <p class="section-intro">Notre crew dévoué s'est réuni pour te couvrir de love, d'anecdotes et de souvenirs mémorables.</p>
+            <div class="squad-grid">
+                <article class="squad-card">
+                    <span class="icon">🎉</span>
+                    <h3>Planque à surprises</h3>
+                    <p>On a répété nos entrées dramatiques pour que chaque moment te fasse rire aux éclats.</p>
+                </article>
+                <article class="squad-card">
+                    <span class="icon">🤫</span>
+                    <h3>Secrets scellés</h3>
+                    <p>Entre nous, aucune boulette ne fuit : on garde les meilleures private jokes pour ce soir.</p>
+                </article>
+                <article class="squad-card">
+                    <span class="icon">🚀</span>
+                    <h3>Mission Eva 16</h3>
+                    <p>Objectif officiel : faire rayonner tes 16 ans plus haut que les étoiles de Montmartre.</p>
+                </article>
             </div>
         </section>
 
-        <section class="spicy-challenges">
-            <div class="section-header">
-                <h2>Défis Coquins</h2>
-                <button id="clearChallenges" class="clear-btn">🗑️ Effacer l'historique des défis</button>
-            </div>
-            <div class="challenge-display">
-                <div class="current-challenge">
-                    <p class="challenge-text">Cliquez sur le bouton pour obtenir un défi...</p>
-                    <span class="challenge-level"></span>
-                </div>
-                <button id="newChallenge" class="btn">Nouveau Défi</button>
-            </div>
-        </section>
-
-        <section id="wish-list" class="section">
-            <div class="section-header">
-                <h2>💭 Wish List</h2>
-                <button id="clearWishes" class="clear-btn">🗑️ Effacer tous les souhaits</button>
-            </div>
-            <div class="wish-container">
-                <div class="wish-input">
-                    <input type="text" id="wishInput" placeholder="Ajouter un fantasme ou désir...">
-                    <button id="addWish">➕</button>
-                </div>
-                <div class="wish-list"></div>
-            </div>
-        </section>
-
-        <section id="date-night" class="section">
-            <div class="section-header">
-                <h2>🌙 Date Night</h2>
-                <button id="clearDates" class="clear-btn">🗑️ Effacer l'historique des dates</button>
-            </div>
-            <div class="date-container">
-                <div class="date-idea">
-                    <p class="date-text">Cliquez sur le bouton pour générer une idée de date</p>
-                </div>
-                <button id="generateDate" class="action-btn">Générer une Date</button>
+        <section class="section letters" aria-labelledby="letters-title">
+            <h2 id="letters-title" class="section-title">Lettres secrètes pour Eva</h2>
+            <p class="section-intro">Clique sur chaque enveloppe pour dévoiler un mot doux, une surprise ou un petit délire à partager avec Noah.</p>
+            <div class="letter-grid">
+                <button class="letter" data-message="Tu es la playlist préférée de tout le monde, avec un refrain qui reste en tête pendant des jours.">
+                    <span class="letter-front">1</span>
+                    <span class="letter-back">Tu es la playlist préférée de tout le monde, avec un refrain qui reste en tête pendant des jours.</span>
+                </button>
+                <button class="letter" data-message="Noah est officiellement le gars le plus chanceux de Paris et bien au-delà.">
+                    <span class="letter-front">2</span>
+                    <span class="letter-back">Noah est officiellement le gars le plus chanceux de Paris et bien au-delà.</span>
+                </button>
+                <button class="letter" data-message="Ton rire devrait être remboursé par la sécu : c'est une thérapie gratuite pour tous.">
+                    <span class="letter-front">3</span>
+                    <span class="letter-back">Ton rire devrait être remboursé par la sécu : c'est une thérapie gratuite pour tous.</span>
+                </button>
+                <button class="letter" data-message="Ce soir, mission lune : pique-nique nocturne avec Noah, playlist chill et étoiles complices.">
+                    <span class="letter-front">4</span>
+                    <span class="letter-back">Ce soir, mission lune : pique-nique nocturne avec Noah, playlist chill et étoiles complices.</span>
+                </button>
+                <button class="letter" data-message="Si la joie avait un parfum, ce serait celui que tu laisses partout derrière toi.">
+                    <span class="letter-front">5</span>
+                    <span class="letter-back">Si la joie avait un parfum, ce serait celui que tu laisses partout derrière toi.</span>
+                </button>
+                <button class="letter" data-message="La team Montmartre propose ton nom pour présidente du bonheur (mandat illimité).">
+                    <span class="letter-front">6</span>
+                    <span class="letter-back">La team Montmartre propose ton nom pour présidente du bonheur (mandat illimité).</span>
+                </button>
             </div>
         </section>
 
-        <section id="truth-dare" class="section">
-            <div class="section-header">
-                <h2>🎲 Truth or Dare</h2>
-                <button id="clearTruthDare" class="clear-btn">🗑️ Effacer l'historique</button>
-            </div>
-            <div class="game-container">
-                <div class="game-choice">
-                    <button id="truthBtn" class="game-btn">Vérité</button>
-                    <button id="dareBtn" class="game-btn">Action</button>
+        <section class="section timeline" aria-labelledby="timeline-title">
+            <h2 id="timeline-title" class="section-title">La folle chronologie de votre histoire</h2>
+            <div class="timeline-wrapper">
+                <div class="timeline-event">
+                    <span class="timeline-time">Hier</span>
+                    <h3>Officiel !</h3>
+                    <p>Eva + Noah = couple le plus adorable. Toute la bande a fondu.</p>
                 </div>
-                <div class="game-content">
-                    <p class="game-text">Choisissez Vérité ou Action</p>
+                <div class="timeline-event">
+                    <span class="timeline-time">Aujourd'hui</span>
+                    <h3>16 bougies</h3>
+                    <p>Une reine souffle ses bougies avec l'énergie d'un feu d'artifice.</p>
+                </div>
+                <div class="timeline-event">
+                    <span class="timeline-time">Demain</span>
+                    <h3>Plan secret</h3>
+                    <p>Destination surprise sur la butte Montmartre pour un coucher de soleil panoramique ? 😏</p>
+                </div>
+                <div class="timeline-event">
+                    <span class="timeline-time">Toujours</span>
+                    <h3>Team Eva</h3>
+                    <p>On reste derrière toi, prêts à lancer des confettis dès que tu souris.</p>
                 </div>
             </div>
         </section>
 
-        <section id="role-play" class="section">
-            <div class="section-header">
-                <h2>🎭 Scénarios de Rôle</h2>
-                <button id="clearScenarios" class="clear-btn">🗑️ Effacer l'historique</button>
-            </div>
-            <div class="scenario-container">
-                <div class="scenario-content">
-                    <p class="scenario-text">Cliquez pour générer un scénario</p>
-                </div>
-                <button id="generateScenario" class="action-btn">Nouveau Scénario</button>
-            </div>
-        </section>
-
-        <section id="ephemeral-photos" class="section">
-            <div class="section-header">
-                <h2>🔒 Photos Éphémères</h2>
-                <button id="clearEphemeralPhotos" class="clear-btn">🗑️ Effacer toutes les photos</button>
-            </div>
-            <div class="ephemeral-container">
-                <div class="photo-upload">
-                    <div class="upload-area" id="dropZone">
-                        <input type="file" id="ephemeralPhotoInput" accept="image/*" multiple style="display: none;">
-                        <div class="upload-prompt">
-                            <span class="upload-icon">📸</span>
-                            <p>Glissez vos photos ici ou cliquez pour sélectionner</p>
-                        </div>
-                    </div>
-                    <div class="upload-options">
-                        <div class="password-field">
-                            <label for="photoPassword">Mot de passe :</label>
-                            <input type="password" id="photoPassword" placeholder="Entrez un mot de passe">
-                        </div>
-                        <div class="timer-field">
-                            <label for="photoTimer">Durée (minutes) :</label>
-                            <input type="number" id="photoTimer" min="0" value="0" placeholder="0 = illimité">
-                        </div>
-                        <button id="sendPhotoBtn" class="upload-btn">Envoyer</button>
-                    </div>
-                </div>
-                <div class="ephemeral-gallery"></div>
-            </div>
-        </section>
-
-        <!-- Mode Hardcore -->
-        <section class="hardcore-container">
-            <h2>Mode Hardcore 🔥</h2>
-            <div class="hardcore-tabs">
-                <button class="tab-btn active" data-tab="challenges">Défis</button>
-                <button class="tab-btn" data-tab="messages">Messages</button>
-                <button class="tab-btn" data-tab="commands">Commandes</button>
-            </div>
-
-            <div id="challenges" class="tab-content active">
-                <div class="challenge-display">
-                    <div class="challenge-text">Cliquez sur le bouton pour générer un défi</div>
-                    <div class="challenge-level"></div>
-                </div>
-                <button id="newHardcoreChallenge" class="action-btn">Nouveau Défi</button>
-            </div>
-
-            <div id="messages" class="tab-content">
-                <div class="message-display">
-                    <div class="message-text">Cliquez sur le bouton pour générer un message</div>
-                </div>
-                <button id="newHardcoreMessage" class="action-btn">Nouveau Message</button>
-            </div>
-
-            <div id="commands" class="tab-content">
-                <div class="command-display">
-                    <div class="command-text">Cliquez sur le bouton pour générer une commande</div>
-                </div>
-                <button id="newHardcoreCommand" class="action-btn">Nouvelle Commande</button>
-            </div>
-        </section>
-
-        <section id="connection" class="section">
-            <div class="section-header">
-                <h2>🔗 Connexion P2P</h2>
-            </div>
-            <div class="connection-container">
-                <div class="connection-status">
-                    <p>Statut: <span id="connectionStatus">Non connecté</span></p>
-                    <p>Votre ID: <span id="peerId">En attente...</span></p>
-                </div>
-                <div class="connection-form">
-                    <input type="text" id="peerIdInput" placeholder="Entrez l'ID de votre partenaire">
-                    <button id="connectBtn" class="btn">Se connecter</button>
-                </div>
-                <div class="connection-info">
-                    <p>Pour vous connecter :</p>
-                    <ol>
-                        <li>Ouvrez le site sur deux navigateurs différents</li>
-                        <li>Copiez l'ID de votre partenaire</li>
-                        <li>Collez l'ID dans le champ ci-dessus</li>
-                        <li>Cliquez sur "Se connecter"</li>
-                    </ol>
+        <section class="section montmartre" aria-labelledby="montmartre-title">
+            <h2 id="montmartre-title" class="section-title">Montmartre sous les étoiles</h2>
+            <div class="montmartre-content">
+                <p>Tout en haut de la butte, on raconte qu'Eva a lancé une nouvelle fête foraine improvisée : guirlandes, chants et éclats de rire qui résonnent dans tout Paris. Noah, prépare-toi : la balade romantique s'annonce légendaire.</p>
+                <div class="montmartre-ticket">
+                    <span class="ticket-title">Pass VIP</span>
+                    <span class="ticket-detail">Eva &amp; Noah</span>
+                    <span class="ticket-foot">Montmartre Express</span>
                 </div>
             </div>
         </section>
-    </div>
+
+        <section class="section fireworks">
+            <h2 class="section-title">Déclenche les feux d'artifice</h2>
+            <p class="section-intro">Clique sur les orbes pour révéler des mini-souhaits et illuminer la fête.</p>
+            <div class="firework-grid">
+                <button class="firework" data-spark="Que cette année soit un festival de souvenirs déments !">✨</button>
+                <button class="firework" data-spark="Noah + Eva = duo imbattable dans tous les défis à venir.">💥</button>
+                <button class="firework" data-spark="Toujours plus de rires, de photos et de private jokes absurdes.">🌠</button>
+                <button class="firework" data-spark="Ne change jamais : ta vibe illumine tout, partout, tout le temps.">🎇</button>
+            </div>
+            <div class="firework-message" role="status" aria-live="polite"></div>
+        </section>
+
+        <section class="section contributions" id="contributions" aria-labelledby="contributions-title">
+            <div class="contributions-header">
+                <h2 id="contributions-title" class="section-title">Mur des souvenirs pour Eva</h2>
+                <p class="section-intro">
+                    Ajoute tes photos, vidéos et mots doux pour qu'Eva découvre un mur rempli d'amour. Tout ce que la team
+                    Oups la boulette dépose ici est sauvegardé sur notre mini-serveur pour que tout le monde puisse le
+                    contempler en même temps.
+                </p>
+            </div>
+
+            <form id="contributionForm" class="contribution-form" novalidate>
+                <div class="form-grid">
+                    <label class="form-field">
+                        <span>Ton prénom</span>
+                        <input type="text" name="name" placeholder="Ex : Lila" autocomplete="name">
+                    </label>
+                    <label class="form-field">
+                        <span>Un petit mot</span>
+                        <textarea name="message" rows="3" placeholder="Raconte un souvenir, un délire, un compliment…"></textarea>
+                    </label>
+                    <label class="form-field">
+                        <span>Photo ou vidéo à ajouter</span>
+                        <input type="file" name="media" accept="image/*,video/*">
+                        <small>Formats image/vidéo, max 20&nbsp;Mo conseillés.</small>
+                    </label>
+                    <label class="form-field">
+                        <span>Lien vidéo (YouTube, TikTok…)</span>
+                        <input type="url" name="videoLink" placeholder="https://youtu.be/...">
+                    </label>
+                </div>
+                <p class="form-tip">Astuce : chacun peut contribuer depuis son appareil et tout apparaît instantanément pour la team.</p>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Ajouter au mur</button>
+                    <button type="button" id="clearContributions" class="btn subtle">Tout effacer pour tout le monde</button>
+                </div>
+                <p class="form-status" role="status" aria-live="polite"></p>
+            </form>
+
+            <div class="contribution-wall" aria-live="polite">
+                <p class="empty-state">Personne n'a encore écrit. Lance-toi et ouvre le bal des souvenirs !</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Fait avec <span aria-hidden="true">💖</span> pour Eva par toute la team. Continue à rayonner !</p>
+    </footer>
+
+    <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+    <script src="script.js" defer></script>
 </body>
-</html> 
+</html>
